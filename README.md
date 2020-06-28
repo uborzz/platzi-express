@@ -11,3 +11,6 @@ express --view=pug nombre-app
 npm init -y
 npm i -S express
 * deps de desarrollo con -D
+
+### Using pug
+needs install: npm i -S pug
