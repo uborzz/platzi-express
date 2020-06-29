@@ -37,3 +37,9 @@ app.engine('hbs', engines.handlebars)
 app.set('views', './views')
 app.set('view engine', 'hbs')
 ```
+
+### parse body
+middleware para procesar cuerpos en formato json
+```
+npm i -S body-parse
+```
