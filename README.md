@@ -43,3 +43,33 @@ middleware para procesar cuerpos en formato json
 ```
 npm i -S body-parser
 ```
+
+### Sentry
+    https://docs.sentry.io/error-reporting/quickstart/?platform=node
+
+errorsHandlers.js
+```javascript
+const Sentry = require("@sentry/node");
+
+Sentry.init({dsn: `${config.sentryDsn}`});
+```
+
+function logErrors
+```javascript
+// utils/middlewares/errorsHandlers.js
+
+function logErrors(err, req, res, next) {
+  Sentry.captureException(err);
+  console.error(err.stack);
+  next(err);
+}
+```
+
+### middlewares populares
+* express.json o body-parser.json: requests-Json
+* cors: cross origin
+* morgan: logs
+* helmet: opciones de seguridad, buena docu.
+* express-debug: debugger por defecto de express
+* express-slash: Permite aceptar urls sin el slash final
+* passport: Autenticación y autorización
