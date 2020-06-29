@@ -36,12 +36,14 @@ router.get("/:productId", async function (req, res, next) {
 
 router.post("/", async function (req, res, next) {
   const { body: product } = req; // alias
+  console.log("REQ")
+  console.log(req)
 
   try {
-    const createdProduct = productService.createProduct({ product });
+    const createdProductId = await productService.createProduct({ product });
 
     res.status(201).json({
-      data: createdProduct,
+      data: createdProductId,
       message: "product listed",
     });
   } catch (err) {
@@ -54,7 +56,7 @@ router.put("/:productId", async function (req, res, next) {
   const { body: product } = req;
 
   try {
-    const updatedProduct = productService.updateProduct({ productId, product });
+    const updatedProduct = await productService.updateProduct({ productId, product });
     res.status(200).json({
       data: updatedProduct,
       message: "product updated",
@@ -65,27 +67,29 @@ router.put("/:productId", async function (req, res, next) {
 });
 
 
-router.patch("/:productId", async function (req, res, next) {
-  const { productId } = req.params;
-  const { body: changes } = req;
+// router.patch("/:productId", async function (req, res, next) {
+//   const { productId } = req.params;
+//   const { body: changes } = req;
 
-  try {
-    const modifiedProduct = productService.modifyProduct({ productId, changes });
-    res.status(200).json({
-      data: modifiedProduct,
-      message: "product modified",
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+//   try {
+//     const modifiedProduct = productService.modifyProduct({ productId, changes });
+//     res.status(200).json({
+//       data: modifiedProduct,
+//       message: "product modified",
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 router.delete("/:productId", async function (req, res, next) {
+  const { productId } = req.params;
+
   try {
-    const product = await productService.getProduct({ productId });
+    const deletedProductId = await productService.deleteProduct({ productId });
 
     res.status(200).json({
-      data: product,
+      data: deletedProductId,
       message: "product deleted",
     });
   } catch (err) {

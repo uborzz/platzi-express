@@ -9,30 +9,35 @@ class ProductsService {
     this.mongoDB = new MongoLib();
   }
 
-  getProducts({ tags }) {
+  async getProducts({ tags }) {
     const query = tags && { tags: { $in: tags } };
     const products = this.mongoDB.getAll(this.collection, query);
     return products || [];
   }
 
-  getProduct({ productId }) {
-    return Promise.resolve(productsMock[0]);
+  async getProduct({ productId }) {
+    const product = this.mongoDB.get(this.collection, productId);
+    return product || {}
   }
 
-  createProduct({ product }) {
-    return Promise.resolve(productsMock[1]);
+  async createProduct({ product }) {
+    const productId = await this.mongoDB.create(this.collection, product)
+    console.log("PRODUCT ID AFTER CREATION!", productId)
+    return productId;
   }
 
-  updateProduct({ productId, product }) {
-    return Promise.resolve(productsMock[0]);
+  async updateProduct({ productId, product }) {
+    const updatedProductId = await this.mongoDB.update(this.collection, productId, product)
+    return updatedProductId;
   }
 
-  modifyProduct({ productId, changes }) {
-    return Promise.resolve(productsMock[0]);
-  }
+//   async modifyProduct({ productId, changes }) {
+//     return Promise.resolve(productsMock[0]);
+//   }
 
-  deleteProduct({ productId }) {
-    return Promise.resolve(productsMock[0]);
+  async deleteProduct({ productId }) {
+    const deletedProductId = await this.mongoDB.delete(this.collection, productId)
+    return deletedProductId;
   }
 }
 

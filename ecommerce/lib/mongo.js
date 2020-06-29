@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const { config } = require("../config");
 
 let MONGO_URI = "";
@@ -10,7 +10,7 @@ if (config.dev) {
 
 const DB_NAME = config.dbName;
 console.log(config);
-console.log(MONGO_URI)
+console.log(MONGO_URI);
 
 class MongoLib {
   constructor() {
@@ -19,13 +19,14 @@ class MongoLib {
   }
 
   async connect() {
-    try {
-        await this.client.connect()
-        console.log("Connected to mongo");
-        return this.client.db(this.dbName)
-    } catch (e) {
-        console.error(e)
-    }
+    // try {
+    await this.client.connect();
+    console.log("Connected to mongo");
+    return this.client.db(this.dbName);
+    // } catch (e) {
+    //   console.error("ERROR!", e);
+    // }
+
     // return new Promise((resolve, reject) => {
     //   this.client.connect((error) => {
     //     if (error) {
@@ -38,11 +39,45 @@ class MongoLib {
   }
 
   async getAll(collection, query) {
-    const db = await this.connect()
+    // try {
+    const db = await this.connect();
     return await db.collection(collection).find(query).toArray();
+    // } catch (e) {
+    //   console.error("ERROR!", e);
+    // }
+
     // return this.connect().then((db) => {
     //   return db.collection(collection).find(query).toArray();
     // });
+  }
+
+  async get(collection, id) {
+    const db = await this.connect();
+    return await db.collection(collection).findOne({ _id: ObjectId(id) });
+  }
+
+  async create(collection, data) {
+    const db = await this.connect();
+    const created = await db.collection(collection).insertOne(data);
+    return created.insertedId;
+  }
+
+  async update(collection, id, data) {
+    const db = await this.connect();
+    const result = await db
+      .collection(collection)
+      .updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true });
+    return result.upsertedId || id;
+  }
+
+  async delete(collection, id) {
+    const db = await this.connect();
+    const result = await db
+      .collection(collection)
+      .deleteOne({ _id: ObjectId(id) });
+    if (result.deletedCount) {
+      return id;
+    } 
   }
 }
 
