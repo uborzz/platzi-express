@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const products = require("../../utils/mocks/products");
 const ProductsService = require("../../services/products");
 
 productsService = new ProductsService();

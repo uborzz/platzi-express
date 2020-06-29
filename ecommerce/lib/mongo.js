@@ -9,8 +9,6 @@ if (config.dev) {
 }
 
 const DB_NAME = config.dbName;
-console.log(config);
-console.log(MONGO_URI);
 
 class MongoLib {
   constructor() {
