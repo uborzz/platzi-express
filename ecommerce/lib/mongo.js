@@ -18,22 +18,31 @@ class MongoLib {
     this.dbName = DB_NAME;
   }
 
-  connect() {
-    return new Promise((resolve, reject) => {
-      this.client.connect((error) => {
-        if (error) {
-          reject(error);
-        }
+  async connect() {
+    try {
+        await this.client.connect()
         console.log("Connected to mongo");
-        resolve(this.client.db(this.dbName));
-      });
-    });
+        return this.client.db(this.dbName)
+    } catch (e) {
+        console.error(e)
+    }
+    // return new Promise((resolve, reject) => {
+    //   this.client.connect((error) => {
+    //     if (error) {
+    //       reject(error);
+    //     }
+    //     console.log("Connected to mongo");
+    //     resolve(this.client.db(this.dbName));
+    //   });
+    // });
   }
 
-  getAll(collection, query) {
-    return this.connect().then((db) => {
-      return db.collection(collection).find(query).toArray();
-    });
+  async getAll(collection, query) {
+    const db = await this.connect()
+    return await db.collection(collection).find(query).toArray();
+    // return this.connect().then((db) => {
+    //   return db.collection(collection).find(query).toArray();
+    // });
   }
 }
 
